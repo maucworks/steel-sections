@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+title: steel-sections
+message: "If you use these section tables, please cite this repository."
+type: dataset
+authors:
+  - family-names: Boer
+    given-names: Sander
+license: CC0-1.0
+repository-code: "https://github.com/maucworks/steel-sections"
+abstract: >-
+  Open structural steel section dimensions, orientation conventions and
+  machine-checkable reference outlines for IFC tooling. CC0.
