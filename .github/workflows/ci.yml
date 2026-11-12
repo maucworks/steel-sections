@@ -17,3 +17,5 @@ jobs:
         run: pip install jsonschema
       - name: Validate section files against the schema
         run: python tools/validate.py
+      - name: Reference vectors are fresh
+        run: python tools/derive.py --check
