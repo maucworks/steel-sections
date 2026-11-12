@@ -72,22 +72,26 @@ def _shoelace(pts):
 
 
 def build():
-    data = json.loads((ROOT / "sections" / "v1" / "ipe.json").read_text())
     out = {"conventions": "conventions.md",
            "unit": "mm",
            "sections": {}}
-    for s in data["sections"]:
-        dims, r = s["dims"], s["dims"].get("r", 0.0)
-        coarse = [[round(x, 3), round(y, 3)] for x, y in coarse_i(dims)]
-        coarse_area = _shoelace(coarse)
-        fillet = 4 * r * r * (1 - math.pi / 4)
-        entry = {"coarse": coarse,
-                 "coarse_area_mm2": round(coarse_area, 3),
-                 "fillet_area_mm2": round(fillet, 3),
-                 "fine_area_mm2": round(coarse_area + fillet, 3)}
-        if r > 0:
-            entry["fine"] = fine_i(dims)
-        out["sections"][s["designation"]] = entry
+    for path in sorted((ROOT / "sections" / "v1").glob("*.json")):
+        data = json.loads(path.read_text())
+        shape = data.get("shape", "I")
+        if shape != "I":
+            raise SystemExit(f"{path.name}: shape {shape!r} not supported yet")
+        for s in data["sections"]:
+            dims, r = s["dims"], s["dims"].get("r", 0.0)
+            coarse = [[round(x, 3), round(y, 3)] for x, y in coarse_i(dims)]
+            coarse_area = _shoelace(coarse)
+            fillet = 4 * r * r * (1 - math.pi / 4)
+            entry = {"coarse": coarse,
+                     "coarse_area_mm2": round(coarse_area, 3),
+                     "fillet_area_mm2": round(fillet, 3),
+                     "fine_area_mm2": round(coarse_area + fillet, 3)}
+            if r > 0:
+                entry["fine"] = fine_i(dims)
+            out["sections"][s["designation"]] = entry
     return out
 
 
